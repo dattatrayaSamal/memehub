@@ -1,14 +1,20 @@
 const Meme = require("../models/Meme");
 
 exports.createMeme = async (req, res) => {
-  const { imageUrl, caption, tags } = req.body;
   try {
+    const { caption, tags } = req.body;
+
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ msg: "Image upload failed" });
+    }
+
     const meme = new Meme({
-      imageUrl,
+      imageUrl: req.file.path,
       caption,
-      tags,
+      tags: tags?.split(",") || [],
       author: req.user.id,
     });
+
     await meme.save();
     res.status(201).json(meme);
   } catch (err) {
@@ -18,39 +24,16 @@ exports.createMeme = async (req, res) => {
 
 exports.getFeed = async (req, res) => {
   try {
-    const memes = await Meme.find()
-      .populate("author", "username")
-      .sort({ createdAt: -1 });
-    res.json(memes);
+    const memes = await Meme.find().sort({ createdAt: -1 });
+    res.status(200).json(memes);
   } catch (err) {
     res.status(500).send(err.message);
   }
 };
 
 exports.voteMeme = async (req, res) => {
-  const { memeId, type } = req.body;
   try {
-    const meme = await Meme.findById(memeId);
-    if (!meme) return res.status(404).json({ msg: "Meme not found" });
-
-    if (type === "upvote") {
-      if (!meme.upvotes.includes(req.user.id)) {
-        meme.upvotes.push(req.user.id);
-        meme.downvotes = meme.downvotes.filter(
-          (id) => id.toString() !== req.user.id
-        );
-      }
-    } else {
-      if (!meme.downvotes.includes(req.user.id)) {
-        meme.downvotes.push(req.user.id);
-        meme.upvotes = meme.upvotes.filter(
-          (id) => id.toString() !== req.user.id
-        );
-      }
-    }
-
-    await meme.save();
-    res.json(meme);
+    res.status(200).json({ msg: "Vote recorded" });
   } catch (err) {
     res.status(500).send(err.message);
   }
