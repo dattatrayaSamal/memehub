@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const memeRoutes = require("./routes/memeRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
 
 const app = express();
 app.use(express.json());
@@ -14,6 +16,8 @@ mongoose
   .catch((err) => console.log("MongoDb Disconnected!", err));
 
 app.use("/auth", authRoutes);
+app.use("/meme", memeRoutes);
+app.use("/analytics", analyticsRoutes);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
