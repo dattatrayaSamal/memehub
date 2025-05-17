@@ -5,6 +5,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const memeRoutes = require("./routes/memeRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ mongoose
 app.use("/auth", authRoutes);
 app.use("/meme", memeRoutes);
 app.use("/analytics", analyticsRoutes);
+app.use('/api/dashboard', dashboardRoutes);//dashboard
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
