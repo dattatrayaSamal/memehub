@@ -8,6 +8,7 @@ const authRoutes = require("./routes/authRoutes");
 const memeRoutes = require("./routes/memeRoutes");
 const templateRoutes = require("./routes/templateRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use("/auth", authRoutes);
 app.use("/meme", memeRoutes);
 app.use("/template", templateRoutes);
 app.use("/analytics", analyticsRoutes);
+app.use('/api/dashboard', dashboardRoutes);//dashboard
 
 app.get("/verify", (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
