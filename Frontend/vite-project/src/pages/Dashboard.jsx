@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import * as echarts from "echarts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
 import {
   additionalMemes,
   finalMemes,
@@ -14,7 +15,7 @@ import {
 import "swiper/css";
 import { Link } from "react-router-dom";
 
-const Dashboard = () => {
+const Dashboard = ({ setIsAuthenticated }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeTab, setActiveTab] = useState("trending");
@@ -25,6 +26,7 @@ const Dashboard = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [leaderboardView, setLeaderboardView] = useState("weekly");
+  const navigate = useNavigate();
   // Trending tags data
 
   // Set up all memes for pagination
@@ -230,12 +232,24 @@ const Dashboard = () => {
                 <i className="fas fa-plus mr-2"></i>
                 Create Meme
               </Link>
-              <div className="flex items-center">
+              <div className="flex items-center space-x-2">
                 <img
                   src="https://readdy.ai/api/search-image?query=Professional%20avatar%20photo%20of%20creative%20young%20person%20with%20modern%20style%2C%20simple%20neutral%20background%2C%20high%20quality%20portrait%2C%20digital%20art%20style%2C%20perfect%20for%20profile%20picture&width=100&height=100&seq=12&orientation=squarish"
                   alt="Profile"
                   className="h-8 w-8 rounded-full object-cover cursor-pointer border-2 border-white"
                 />
+
+                {/* Logout Button */}
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    setIsAuthenticated(false);
+                    navigate("/login"); // Redirect to login page
+                  }}
+                  className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-full shadow-sm cursor-pointer"
+                >
+                  Logout
+                </button>
               </div>
             </div>
           </div>
