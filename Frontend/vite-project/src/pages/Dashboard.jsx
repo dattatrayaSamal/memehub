@@ -26,8 +26,36 @@ const Dashboard = ({ setIsAuthenticated }) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [leaderboardView, setLeaderboardView] = useState("weekly");
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
   // Trending tags data
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/auth/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // Add token or any other authorization headers if needed
+            "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data); // You can see the entire response in the console
+          setUsername(data.user.username); // Set username from the response
+        } else {
+          console.error("Failed to fetch user data", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);  
 
   // Set up all memes for pagination
   useEffect(() => {
@@ -158,6 +186,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, [chartInstance]);
+
   return (
     <div className="min-h-screen bg-white text-gray-800">
       {/* Header/Navigation */}
@@ -549,7 +578,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
                 className="h-12 w-12 rounded-full object-cover mr-3 border-2 border-purple-200"
               />
               <div>
-                <h3 className="font-medium text-gray-800">YourUsername</h3>
+                <h3 className="font-medium text-gray-800">{username || "User"}</h3>
                 <p className="text-xs text-gray-500">Meme Creator</p>
               </div>
             </div>

@@ -1,5 +1,5 @@
-const express = require('express');
-const { protect } = require('../middlewares/authMiddleware');
+const express = require("express");
+const { protect } = require("../middlewares/auth");
 const {
   getUserStats,
   getTrendingMemes,
@@ -9,32 +9,32 @@ const {
   getTopCreators,
   getActiveContests,
   getNotifications,
-  getTrendingTags
-} = require('../controllers/dashboardController');
+  getTrendingTags,
+} = require("../controllers/dashboardController");
 
 const router = express.Router();
 
 // User dashboard stats
-router.get('/stats', protect, getUserStats);
+router.get("/stats", protect, getUserStats);
 
 // Meme feeds
-router.get('/trending', getTrendingMemes);
-router.get('/latest', getLatestMemes);
-router.get('/following', protect, getFollowingMemes);
+router.get("/trending", getTrendingMemes);
+router.get("/latest", getLatestMemes);
+router.get("/following", protect, getFollowingMemes);
 
 // Leaderboard
-router.get('/leaderboard', getLeaderboard);
+router.get("/leaderboard", getLeaderboard);
 
 // Top creators
-router.get('/top-creators', getTopCreators);//server error
+router.get("/top-creators", getTopCreators); //server error
 
 // Contests
-router.get('/contests', getActiveContests);
+router.get("/contests", getActiveContests);
 
 // Notifications
-router.get('/notifications', protect, getNotifications);
+router.get("/notifications", protect, getNotifications);
 
 // Trending tags
-router.get('/trending-tags', getTrendingTags);
+router.get("/trending-tags", getTrendingTags);
 
 module.exports = router;
