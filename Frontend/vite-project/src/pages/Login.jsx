@@ -1,54 +1,96 @@
-// import React, { useState } from "react";
-// import apiClient from "../api/axiosConfig";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-// const Login = () => {
-//   const [formData, setFormData] = useState({ email: "", password: "" });
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
+const Login = ({ setIsAuthenticated }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-//     setError(null);
-//     // try {
-//     //   const response = await apiClient.post('/login', formData);
-//     //   localStorage.setItem('jwtToken', response.data.token);
-//     //   setLoading(false);
-//     //   // Redirect to feed on success
-//     //   window.location.href = '/';
-//     // } catch (error) {
-//     //   console.error('Login error:', error);
-//     //   setError('Login failed. Please check your credentials.');
-//     //   setLoading(false);
-//     // }
-//   };
+    try {
+      const response = await axios.post("http://localhost:8000/auth/login", {
+        email,
+        password,
+      });
 
-//   return (
-//     <div>
-//       <h2>Login</h2>
-//       {loading && <p>Loading...</p>}
-//       {error && <p style={{ color: "red" }}>{error}</p>}
-//       <form onSubmit={handleSubmit}>
-//         <input
-//           type="email"
-//           name="email"
-//           placeholder="Email"
-//           onChange={handleChange}
-//         />
-//         <input
-//           type="password"
-//           name="password"
-//           placeholder="Password"
-//           onChange={handleChange}
-//         />
-//         <button type="submit">Login</button>
-//       </form>
-//     </div>
-//   );
-// };
+      localStorage.setItem("token", response.data.token);
+      setIsAuthenticated(true);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed");
+    }
+  };
 
-// export default Login;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-purple-700 via-indigo-700 to-blue-600">
+      <div className="bg-white bg-opacity-90 backdrop-blur-md p-10 rounded-2xl shadow-lg max-w-md w-full">
+        <h2 className="text-4xl font-extrabold text-center text-indigo-900 mb-8">
+          Welcome Back
+        </h2>
+        {error && (
+          <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-6 text-center font-semibold">
+            {error}
+          </div>
+        )}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="relative">
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="peer placeholder-transparent h-12 w-full border-b-2 border-indigo-500 focus:outline-none focus:border-indigo-700"
+              placeholder="Email address"
+            />
+            <label
+              htmlFor="email"
+              className="absolute left-0 -top-5 text-indigo-600 text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 transition-all"
+            >
+              Email Address
+            </label>
+          </div>
+
+          <div className="relative">
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="peer placeholder-transparent h-12 w-full border-b-2 border-indigo-500 focus:outline-none focus:border-indigo-700"
+              placeholder="Password"
+            />
+            <label
+              htmlFor="password"
+              className="absolute left-0 -top-5 text-indigo-600 text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 transition-all"
+            >
+              Password
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-md hover:bg-indigo-700 transition"
+          >
+            Login
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-indigo-700 font-medium">
+          Don't have an account?{" "}
+          <Link to="/register" className="underline hover:text-indigo-900">
+            Register here
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
