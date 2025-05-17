@@ -1,15 +1,39 @@
 const express = require("express");
-const router = express.Router();
-const { protect } = require("../middlewares/authMiddleware");
 const {
   createMeme,
-  getFeed,
-  voteMeme,
+  getMemes,
+  getMyMemes,
+  getFollowingMemes,
+  getMeme,
+  updateMeme,
+  deleteMeme,
+  likeMeme,
+  addComment,
+  deleteComment,
 } = require("../controllers/memeController");
-const { upload } = require("../utils/cloudinary");
+const { protect } = require("../middlewares/auth");
+const upload = require("../middlewares/upload");
 
-router.post("/", protect, upload.single("image"), createMeme);
-router.get("/", getFeed);
-router.post("/vote", protect, voteMeme);
+const router = express.Router();
+
+router
+  .route("/")
+  .get(getMemes)
+  .post(protect, upload.single("image"), createMeme);
+
+router.get("/me", protect, getMyMemes);
+router.get("/following", protect, getFollowingMemes);
+
+router
+  .route("/:id")
+  .get(getMeme)
+  .put(protect, updateMeme)
+  .delete(protect, deleteMeme);
+
+router.put("/:id/like", protect, likeMeme);
+
+router.route("/:id/comments").post(protect, addComment);
+
+router.delete("/:id/comments/:commentId", protect, deleteComment);
 
 module.exports = router;
