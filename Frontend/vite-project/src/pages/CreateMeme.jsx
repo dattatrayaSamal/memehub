@@ -5,8 +5,7 @@ import { popularTemplates } from "../components/data/mockdata";
 import { Link } from "react-router-dom";
 const CreateMeme = () => {
   // Template data
-  //
-  //
+
   // State variables
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [topText, setTopText] = useState("");
