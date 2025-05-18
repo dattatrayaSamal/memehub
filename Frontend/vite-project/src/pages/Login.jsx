@@ -13,7 +13,7 @@ const Login = ({ setIsAuthenticated }) => {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:8000/auth/login", {
+      const response = await axios.post("https://memehub-vfch.onrender.com/auth/login", {
         email,
         password,
       });

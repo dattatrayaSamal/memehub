@@ -33,7 +33,7 @@ const Dashboard = ({ setIsAuthenticated }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/auth/me", {
+        const response = await fetch("https://memehub-vfch.onrender.com/auth/me", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

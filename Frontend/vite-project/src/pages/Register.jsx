@@ -14,7 +14,7 @@ const Register = ({ setIsAuthenticated }) => {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:8000/auth/register", {
+      const response = await axios.post("https://memehub-vfch.onrender.com/auth/register", {
         username,
         email,
         password,
